@@ -1,7 +1,7 @@
 import { describe, it, after, before } from "node:test";
-import { createTestClient } from "./helpers.ts";
+import { createTestClient } from "../helpers.ts";
 import { Client } from "@modelcontextprotocol/sdk/client";
-import { type Customer } from "../src/domain/customer.ts";
+import { type Customer } from "../../src/domain/customer.ts";
 import assert  from "node:assert";
 
 type CustomersResult = {structuredContent: {customers:Customer[]}}
