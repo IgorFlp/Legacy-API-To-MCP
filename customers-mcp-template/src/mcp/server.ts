@@ -3,6 +3,7 @@ import { CustomerHttpClient } from "../infrastructure/customerHttpClient.ts";
 import { registerListCustomersTool } from "./tools/listCustomers.ts";
 import { CustomerSchema } from "../domain/customer.ts";
 import { CustomerService } from "../application/customerService.ts";
+import { registerApiInfoResource } from "./resources/apiInfo.ts";
 
 const BASE_URL = "http://localhost:9999/v1";
 
@@ -15,3 +16,4 @@ export const server = new McpServer({
 });
 
 registerListCustomersTool(server,service)
+registerApiInfoResource(server,BASE_URL)
