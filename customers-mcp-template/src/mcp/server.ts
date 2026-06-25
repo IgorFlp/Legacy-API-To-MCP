@@ -1,7 +1,6 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { CustomerHttpClient } from "../infrastructure/customerHttpClient.ts";
 import { registerListCustomersTool } from "./tools/listCustomers.ts";
-import { CustomerSchema } from "../domain/customer.ts";
+import { registerCreateCustomerTool } from "./tools/createCutomer.ts";
 import { CustomerService } from "../application/customerService.ts";
 import { registerApiInfoResource } from "./resources/apiInfo.ts";
 
@@ -16,4 +15,6 @@ export const server = new McpServer({
 });
 
 registerListCustomersTool(server,service)
+registerCreateCustomerTool(server,service)
+
 registerApiInfoResource(server,BASE_URL)

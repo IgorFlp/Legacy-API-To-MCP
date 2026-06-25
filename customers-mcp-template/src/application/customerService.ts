@@ -9,4 +9,7 @@ export class CustomerService{
     async listCustomers(): Promise<Customer[]>{
         return this.client.listCustomers()
     }
+    async createCustomer(customer:Omit<Customer,"_id">){
+        return this.client.createCustomer(customer)        
+    }
 }
