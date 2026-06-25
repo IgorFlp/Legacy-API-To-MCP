@@ -1,4 +1,4 @@
-import { type Customer } from "../domain/customer.ts";
+import { type CustomerQuery, type Customer } from "../domain/customer.ts";
 import { CustomerHttpClient } from "../infrastructure/customerHttpClient.ts";
 
 export class CustomerService{
@@ -11,5 +11,19 @@ export class CustomerService{
     }
     async createCustomer(customer:Omit<Customer,"_id">){
         return this.client.createCustomer(customer)        
+    }
+    async findCustomer(query: CustomerQuery): Promise<Customer |null>{
+        if(query._id)return this.client.getCustomerById(query._id)
+        
+        const customers = await this.client.listCustomers()
+        return (
+            customers.find(customer=>{
+                const entries = Object.entries(query) as [keyof Customer, string][];
+                return entries.every(([key,value]) =>{
+                    const customerValue = customer[key]
+                    return customerValue?.includes(value)
+                })
+            })
+        ) ?? null
     }
 }
