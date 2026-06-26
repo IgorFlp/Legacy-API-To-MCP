@@ -1,4 +1,4 @@
-import { type CustomerQuery, type Customer } from "../domain/customer.ts";
+import { type CustomerQuery, type Customer, type CustomerUpdate } from "../domain/customer.ts";
 import { CustomerHttpClient } from "../infrastructure/customerHttpClient.ts";
 
 export class CustomerService{
@@ -25,5 +25,11 @@ export class CustomerService{
                 })
             })
         ) ?? null
+    }
+    async updateCustomer(customer:CustomerUpdate){
+        return this.client.updateCustomer(customer)        
+    }
+    async deleteCustomer(id:string){
+        return this.client.deleteCustomer(id)        
     }
 }

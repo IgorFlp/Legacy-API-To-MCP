@@ -1,7 +1,7 @@
 import { type McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { CustomerService } from "../../application/customerService.ts";
 import z from "zod"
-import { type CreatedCustomer} from "../../domain/customer.ts";
+import { type CustomerMutation} from "../../domain/customer.ts";
 
 export function registerCreateCustomerTool(
     server:McpServer,
@@ -22,7 +22,7 @@ export function registerCreateCustomerTool(
         },
         async ({name, phone})=>{ 
             try {                
-                const customer : CreatedCustomer = await service.createCustomer({name,phone})
+                const customer : CustomerMutation = await service.createCustomer({name,phone})
                 return{
                     content: [{
                         type: 'text',
