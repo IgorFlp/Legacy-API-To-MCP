@@ -1,12 +1,12 @@
 import { describe, it, after, before } from "node:test";
 import { createTestClient } from "../helpers.ts";
 import { Client } from "@modelcontextprotocol/sdk/client";
-import { type Customer, type CreatedCustomer } from "../../src/domain/customer.ts";
+import type { CustomerUpdate, Customer, CustomerMutation } from "../../src/domain/customer.ts";
 import assert  from "node:assert";
 
 type CustomersResult = {structuredContent: {customers:Customer[]}}
 type CustomerResult = {structuredContent: {customer:Customer}}
-type CreateCustomerResult = {structuredContent: CreatedCustomer}
+type CustomerMutationResult = {structuredContent: CustomerMutation}
 
 describe("Customer MCP Suite",()=>{
     let client: Client
@@ -30,6 +30,7 @@ describe("Customer MCP Suite",()=>{
         )
 
     })
+    
     it("Should create a new customer",async ()=>{
         const customer = {
                 name: "Teste",
@@ -39,7 +40,9 @@ describe("Customer MCP Suite",()=>{
             name:"create_customer",
             arguments: customer
             
-        })as unknown as CreateCustomerResult
+        })as unknown as CustomerMutationResult       
+
+
         assert.ok(
             result.structuredContent.id,
             'Should contain customer ID'
@@ -59,7 +62,7 @@ describe("Customer MCP Suite",()=>{
             name:"create_customer",
             arguments: customer
             
-        })as unknown as CreateCustomerResult
+        })as unknown as CustomerMutationResult
 
         const result = await client.callTool({
             name:"get_customer",
@@ -79,6 +82,70 @@ describe("Customer MCP Suite",()=>{
             'Should contain customer name'
         )
     })
-    
+    it("Should update a customer",async ()=>{
+        const createCustomer = {
+                name: "Teste",
+                phone: "121-330",                
+        };
+        const {structuredContent:{id}} = await client.callTool({
+            name:"create_customer",
+            arguments: createCustomer
+            
+        })as unknown as CustomerMutationResult
+
+        const result = await client.callTool({
+            name:'update_customer',
+            arguments: {
+                _id: id,
+                name: "Jorge",
+                phone: "121-330",  
+            } as CustomerUpdate
+        }) as unknown as CustomerMutationResult
+
+        assert.deepStrictEqual(
+            result.structuredContent.id,
+            id,
+            'Should contain customer ID'
+        )
+        
+        assert.deepStrictEqual(
+            result.structuredContent.message,
+            `User ${id} updated!`,
+            'Should contain customer create message'
+        )
+        
+    })
+
+    it("Should delete a customer by id",async ()=>{
+        const createCustomer = {
+                name: "Teste",
+                phone: "121-330",                
+        };
+        const {structuredContent:{id}} = await client.callTool({
+            name:"create_customer",
+            arguments: createCustomer
+            
+        })as unknown as CustomerMutationResult
+
+        const result = await client.callTool({
+            name:'delete_customer',
+            arguments: {
+                id: id, 
+            },
+        }) as unknown as CustomerMutationResult
+
+        assert.deepStrictEqual(
+            result.structuredContent.id,
+            id,
+            'Should contain customer ID'
+        )
+        
+        assert.deepStrictEqual(
+            result.structuredContent.message,
+            `User ${id} deleted!`,
+            'Should contain customer create message'
+        )
+        
+    })
 
 })
